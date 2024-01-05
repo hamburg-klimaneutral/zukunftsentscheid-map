@@ -1124,6 +1124,11 @@
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.13.tgz#e6e77ea9ecf36564980a861e24e62a095988775e"
   integrity sha512-bmrNrgKMOhM3WsafmbGmC+6dsF2Z308vLFsQ3a/bT8X8Sv5clVYpPars/UPq+sAaJP+5OoLAYgwbkS5QEJdLUQ==
 
+"@types/google.visualization@^0.0.73":
+  version "0.0.73"
+  resolved "https://registry.yarnpkg.com/@types/google.visualization/-/google.visualization-0.0.73.tgz#e81a5aa501f7a4fc1c818a2e5fb25e81a196450a"
+  integrity sha512-ACEjWFeNJVrV5DUvhODYDQwvWk5wzlqyACy3i+WPMx0v+9ysIYWGVe2uTLVFzpjxy5zA4iF4GrHd9SGtrf+H2A==
+
 "@types/http-proxy@^1.17.14":
   version "1.17.14"
   resolved "https://registry.yarnpkg.com/@types/http-proxy/-/http-proxy-1.17.14.tgz#57f8ccaa1c1c3780644f8a94f9c6b5000b5e2eec"

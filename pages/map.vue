@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
 import { Icon, IconOptions } from "leaflet"
+import useMapMarkersFromSpreadsheet from "~/composables/useMapMarkersFromSpreadsheet"
 import type { MapMarker } from "~/types/marker"
 
 const { $leaflet } = useNuxtApp()
@@ -21,9 +22,15 @@ const iconStyle: Icon<IconOptions> = $leaflet.icon({
   className: "map-marker-pink",
 })
 
-const markers = ref<MapMarker[]>([
-  { position: [53.5523375, 9.9756278], options: { icon: iconStyle } },
-])
+const { fetchLocations } = useMapMarkersFromSpreadsheet()
+const locations = await fetchLocations()
+
+const markers = computed<MapMarker[]>(() => {
+  return locations.map((location) => ({
+    position: location.position,
+    options: { icon: iconStyle },
+  }))
+})
 </script>
 
 <style>
