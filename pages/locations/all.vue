@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <LeafletMap :markers="markers" />
-  </div>
+  <LeafletMap :markers="markers" />
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$style.wrapper">
     <MarkerLegend :mappings="legendMappings" />
     <LeafletMap :markers="markers" />
   </div>
@@ -13,7 +13,7 @@ import useMapMarkersFromSpreadsheet, {
 } from "~/composables/useMapMarkersFromSpreadsheet"
 import type { MapMarker, MarkerColor } from "~/types/marker"
 
-const legendMappings = [
+const legendMappings: { label: string; color: MarkerColor }[] = [
   {
     label: "Abholung & Sammelbox",
     color: "pink",
@@ -56,3 +56,12 @@ const markers: MapMarker[] = locations
     options: { icon: generateIcon(generateIconColor(location)) },
   }))
 </script>
+
+<style module>
+.wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+}
+</style>
