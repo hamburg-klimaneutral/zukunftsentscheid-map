@@ -19,10 +19,11 @@ function isSigningLocation(location: Location) {
   return location.features.signing === true
 }
 
-const markers = computed<MapMarker[]>(() => {
-  return locations.filter(isSigningLocation).map((location) => ({
+const markers: MapMarker[] = locations
+  .filter(isSigningLocation)
+  .map((location) => ({
     position: location.position,
+    tooltip: location.tooltip,
     options: { icon: generateIcon("pink") },
   }))
-})
 </script>

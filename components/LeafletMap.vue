@@ -5,7 +5,7 @@
 </template>
 <script lang="ts" setup>
 import "leaflet/dist/leaflet.css"
-import { LatLngExpression } from "leaflet"
+import { LatLngExpression, Map } from "leaflet"
 import type { MapMarker } from "~/types/marker"
 
 interface Props {
@@ -15,17 +15,17 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   markers: undefined,
-  zoom: 12,
+  zoom: 11,
 })
 
-const center: LatLngExpression = [53.5544583, 9.9903783]
+const center: LatLngExpression = [53.5744583, 9.9903783]
 
 const { $leaflet } = useNuxtApp()
 const mapContainer = ref<HTMLElement | string>("")
-const map = ref()
+let map: Map
 
 const setupMap = () => {
-  map.value = $leaflet.map(mapContainer.value, {
+  const newMap = $leaflet.map(mapContainer.value, {
     center,
     zoom: props.zoom,
   })
@@ -37,20 +37,20 @@ const setupMap = () => {
       // "https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png",
       {
         attribution:
-          '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        // attribution:
-        //   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       },
     )
-    .addTo(map.value)
+    .addTo(newMap)
 
   props.markers.forEach(({ position, options, tooltip }) => {
     const marker = $leaflet.marker(position, options)
     if (tooltip) {
-      marker.bindTooltip(tooltip).openTooltip()
+      marker.bindTooltip(JSON.parse(JSON.stringify(tooltip))).openTooltip()
     }
-    marker.addTo(map.value)
+    marker.addTo(newMap)
   })
+
+  map = newMap
 }
 
 watchEffect((onCleanup) => {
@@ -61,8 +61,8 @@ watchEffect((onCleanup) => {
   setupMap()
 
   onCleanup(() => {
-    map.value.off()
-    map.value.remove()
+    map.off()
+    map.remove()
   })
 })
 </script>

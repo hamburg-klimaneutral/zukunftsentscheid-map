@@ -1,4 +1,4 @@
-import type { LatLngExpression } from "leaflet"
+import type { LatLngExpression, LatLngTuple } from "leaflet"
 import useSpreadsheetReader from "~/composables/useSpreadsheetReader"
 
 interface SpreadsheetCol {
@@ -29,7 +29,7 @@ export interface Location {
     signing: boolean
   }
   tooltip: string
-  position: LatLngExpression
+  position: LatLngTuple
 }
 
 function readValue(value: SpreadsheetValue): string {
@@ -59,7 +59,14 @@ function parseJSONData(json: SpreadsheetJSON): TableDataAsHash[] {
   )
 }
 
-function isValid() {
+function isValid(location: Location): boolean {
+  if (
+    location.position.length !== 2 ||
+    location.position.some((coordinate) => Number.isNaN(coordinate))
+  ) {
+    console.debug(`location "${location.name}" has invalid position`)
+    return false
+  }
   return true
 }
 
@@ -83,19 +90,19 @@ function formatTooltip(entry: TableDataAsHash) {
 }
 
 function tableDataToLocations(data: TableDataAsHash[]): Location[] {
-  return data.filter(isValid).map((entry) => ({
-    name: entry.NAME,
-    address: entry.ADRESSE,
-    features: {
-      pickup: entry.ABHOLUNG === "Ja",
-      dropOff: entry.SAMMELORT === "Ja",
-      signing: entry.UNTERSCHREIBEN === "Ja",
-    },
-    tooltip: formatTooltip(entry),
-    position: entry.KOORDINATEN.split(",", 2).map(
-      parseFloat,
-    ) as LatLngExpression,
-  }))
+  return data
+    .map((entry) => ({
+      name: entry.NAME,
+      address: entry.ADRESSE,
+      features: {
+        pickup: entry.ABHOLUNG === "Ja",
+        dropOff: entry.SAMMELORT === "Ja",
+        signing: entry.UNTERSCHREIBEN === "Ja",
+      },
+      tooltip: formatTooltip(entry),
+      position: entry.KOORDINATEN.split(",", 2).map(parseFloat) as LatLngTuple,
+    }))
+    .filter((data) => isValid(data))
 }
 
 export default function useMapMarkersFromSpreadsheet() {

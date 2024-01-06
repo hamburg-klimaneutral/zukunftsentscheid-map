@@ -18,4 +18,10 @@ export default defineNuxtConfig({
         "https://docs.google.com/spreadsheets/d/1ByzJEbmbDGe6f_mUbg3MY5y4EJYSvy5_8qES0vcA1Cc/edit#gid=0",
     },
   },
+  modules: ["@nuxtjs/google-fonts"],
+  googleFonts: {
+    families: {
+      Inter: "200..700",
+    },
+  },
 })
