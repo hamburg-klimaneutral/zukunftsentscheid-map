@@ -44,9 +44,13 @@ const setupMap = () => {
     )
     .addTo(map.value)
 
-  props.markers.forEach(({ position, options }) =>
-    $leaflet.marker(position, options).addTo(map.value),
-  )
+  props.markers.forEach(({ position, options, tooltip }) => {
+    const marker = $leaflet.marker(position, options)
+    if (tooltip) {
+      marker.bindTooltip(tooltip).openTooltip()
+    }
+    marker.addTo(map.value)
+  })
 }
 
 watchEffect((onCleanup) => {

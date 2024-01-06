@@ -20,11 +20,14 @@ interface SpreadsheetJSON {
   rows: SpreadsheetRow[]
 }
 
-interface Location {
+export interface Location {
   name: string
   address: string
-  pickup: boolean
-  dropOff: boolean
+  features: {
+    pickup: boolean
+    dropOff: boolean
+    signing: boolean
+  }
   tooltip: string
   position: LatLngExpression
 }
@@ -38,6 +41,7 @@ interface TableDataAsHash {
   ADRESSE: string
   ABHOLUNG: string
   SAMMELORT: string
+  UNTERSCHREIBEN: string
   STATUS: string
   TOOLTIP: string
   KOORDINATEN: string
@@ -59,13 +63,35 @@ function isValid() {
   return true
 }
 
+const escapeHtml = (unsafe: string) => {
+  return unsafe
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;")
+}
+
+function formatTooltip(entry: TableDataAsHash) {
+  const lines: string[] = [
+    `<b>${escapeHtml(entry.NAME.trim())}</b>`,
+    escapeHtml(entry.ADRESSE.trim()),
+    entry.TOOLTIP.trim() &&
+      `<br />${escapeHtml(entry.TOOLTIP.trim())}`.replace(/\n/g, "<br />"),
+  ]
+  return lines.join("<br />")
+}
+
 function tableDataToLocations(data: TableDataAsHash[]): Location[] {
   return data.filter(isValid).map((entry) => ({
     name: entry.NAME,
     address: entry.ADRESSE,
-    pickup: entry.ABHOLUNG === "Ja",
-    dropOff: entry.SAMMELORT === "Ja",
-    tooltip: entry.TOOLTIP,
+    features: {
+      pickup: entry.ABHOLUNG === "Ja",
+      dropOff: entry.SAMMELORT === "Ja",
+      signing: entry.UNTERSCHREIBEN === "Ja",
+    },
+    tooltip: formatTooltip(entry),
     position: entry.KOORDINATEN.split(",", 2).map(
       parseFloat,
     ) as LatLngExpression,
