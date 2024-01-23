@@ -11,9 +11,20 @@ const { generateIcon } = useCustomLeafletIcons()
 const { fetchLocations } = useMapMarkersFromSpreadsheet()
 const locations = await fetchLocations()
 
-const markers: MapMarker[] = locations.map((location) => ({
-  position: location.position,
-  tooltip: location.tooltip,
-  options: { icon: generateIcon("pink") },
-}))
+function formatYesNo(yes: boolean) {
+  return yes ? "Ja" : "Nein"
+}
+
+const markers: MapMarker[] = locations.map((location) => {
+  const featureLines = [
+    `Unterschreiben: ${formatYesNo(location.features.signing)}`,
+    `Abholen: ${formatYesNo(location.features.pickup)}`,
+    `Sammelbox: ${formatYesNo(location.features.dropOff)}`,
+  ]
+  return {
+    position: location.position,
+    tooltip: `${location.tooltip}<br /><br />${featureLines.join("<br />")}`,
+    options: { icon: generateIcon("pink") },
+  }
+})
 </script>
