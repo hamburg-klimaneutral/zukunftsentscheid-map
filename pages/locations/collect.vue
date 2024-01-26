@@ -13,12 +13,12 @@ const { generateIcon } = useCustomLeafletIcons()
 const { fetchLocations } = useMapMarkersFromSpreadsheet()
 const locations = await fetchLocations()
 
-function isSigningLocation(location: Location) {
-  return location.features.signing === true
+function isDropOffLocation(location: Location) {
+  return location.features.signing || location.features.dropOff
 }
 
 const markers: MapMarker[] = locations
-  .filter(isSigningLocation)
+  .filter(isDropOffLocation)
   .filter((location) => !location.features.isEmptied)
   .map((location) => ({
     position: location.position,

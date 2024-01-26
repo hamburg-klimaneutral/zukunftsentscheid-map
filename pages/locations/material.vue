@@ -50,6 +50,7 @@ function generateIconColor({
 
 const markers: MapMarker[] = locations
   .filter(isMaterialLocation)
+  .filter((location) => !location.features.isEmptied)
   .map((location) => ({
     position: location.position,
     tooltip: location.tooltip,
