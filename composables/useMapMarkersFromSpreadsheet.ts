@@ -27,6 +27,8 @@ export interface Location {
     pickup: boolean
     dropOff: boolean
     signing: boolean
+    isGoingToBeEmpties: boolean
+    isEmptied: boolean
   }
   tooltip: string
   position: LatLngTuple
@@ -42,6 +44,8 @@ interface TableDataAsHash {
   ABHOLUNG: string
   SAMMELORT: string
   UNTERSCHREIBEN: string
+  WIRD_ABGEHOLT: string
+  IST_ABGEHOLT: string
   STATUS: string
   TOOLTIP: string
   KOORDINATEN: string
@@ -98,6 +102,8 @@ function tableDataToLocations(data: TableDataAsHash[]): Location[] {
         pickup: entry.ABHOLUNG === "Ja",
         dropOff: entry.SAMMELORT === "Ja",
         signing: entry.UNTERSCHREIBEN === "Ja",
+        isGoingToBeEmpties: entry.WIRD_ABGEHOLT === "Ja",
+        isEmptied: entry.IST_ABGEHOLT === "Ja",
       },
       tooltip: formatTooltip(entry),
       position: entry.KOORDINATEN.split(",", 2).map(parseFloat) as LatLngTuple,
